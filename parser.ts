@@ -105,7 +105,7 @@ export abstract class ATreeBuilder /*implements ITreeBuilder*/ {
         } else {
             this.addSimpleElement(element);
         }
-        return(this);
+        return (this);
     }
 
     p
@@ -142,48 +142,48 @@ export class StringToParse implements IStringToParse {
         this.string = string;
         this.setMaxPointerPosition();
         this.resetPointerPosition();
-        return(this);
+        return (this);
     }
 
     private setMaxPointerPosition(): IStringToParse {
-      this.maxPointerPosition = this.string.length -1;
-      return(this);
+        this.maxPointerPosition = this.string.length - 1;
+        return (this);
     }
 
     private resetPointerPosition(): IStringToParse {
         this.setPointerPosition(0);
-        return(this);
+        return (this);
     }
 
     setPointerPosition(pointerPosition: number): IStringToParse {
         this.pointerPosition = pointerPosition;
         this.checkValidPointerPosition();
-        return(this);
+        return (this);
     }
 
     incrementPointerPosition(increment: number): StringToParse {
         this.setPointerPosition(this.pointerPosition + increment);
-        return(this);
+        return (this);
     }
 
     isPointerAtTheEnd(): boolean {
         const retour: boolean = (this.pointerPosition === this.maxPointerPosition);
-        return(retour);
+        return (retour);
     }
 
     private checkValidPointerPosition(): void {
         if (this.pointerPosition > this.maxPointerPosition) {
-            throw new Error( this.getPointerPositionOverflowMessage() );
+            throw new Error(this.getPointerPositionOverflowMessage());
 
         } else if (this.pointerPosition < this.minPointerPosition) {
-            throw new Error( this.getPointerPositionOverflowMessage() );
+            throw new Error(this.getPointerPositionOverflowMessage());
         }
     }
 
     private getPointerPositionOverflowMessage(): string {
-      const retour: string = `Impossible de pointer en position ${this.pointerPosition} ; Intervalle autorisé : `+
-                             `[ ${this.minPointerPosition}, ${this.maxPointerPosition} ].`;
-      return(retour);
+        const retour: string = `Impossible de pointer en position ${this.pointerPosition} ; Intervalle autorisé : ` +
+            `[ ${this.minPointerPosition}, ${this.maxPointerPosition} ].`;
+        return (retour);
     }
 
 }
@@ -201,37 +201,74 @@ export abstract class AStringParser /*implements IStringParser*/ {
 
     setString(stringToParse: string): IStringParser {
         this.string = this.createStringToParseObject(stringToParse);
-        return(this);
+        return (this);
     }
 
     private setTreeBuilder(treeBuilder: ITreeBuilder): IStringParser {
-      this.treeBuilder = treeBuilder;
-      return(this);
+        this.treeBuilder = treeBuilder;
+        return (this);
     }
 
     private createStringToParseObject(stringToParse: string): IStringToParse {
         const retour: IStringToParse = new StringToParse(stringToParse);
-        return(retour);
+        return (retour);
     }
 
     xxx(): void {
-        const element: IElement;
-        let startMarker: string, endMarker: string;
+        let element: IElement;
+        let foundElementMatching: boolean = false;
 
-        while(!this.string.isPointerAtTheEnd()) {
+        while (!this.string.isPointerAtTheEnd()) {
 
-            if ( (startMarker = element.extractStartMarker(this.string)) !== null ) {
-                this.string.incrementPointerPosition( startMarker.length );
+            foundElementMatching = false;
+            while ((element = this.getNextPossibleElement()) !== null) {
 
+                if (element.isBloc
+                si element match as start marker
+                    if this.curret
+
+                foundElementMatching = this.testElementMatching(element);
+                if (foundElementMatching) {
+                    this.currentBlock.addElement(element);
+                    break;
+                }
             }
 
-            if ( (endMarker = element.extractEndMarker(this.string)) !== null ) {
-                this.string.incrementPointerPosition( endMarker.length );
+            if (!foundElementMatching) {
+                this.string.incrementPointerPosition(1);
             }
 
+        }
+
+    }
+
+
+    private testElementMatching(element: IElement): boolean {
+
+        let retour: boolean;
+
+        let foundMarker: string;
+
+        if ((foundMarker = element.extractStartMarker(this.string)) !== null) {
+            
+
+        } else if ((foundMarker = element.extractEndMarker(this.string)) !== null) {
             this.treeBuilder.addElement(element);
 
         }
+
+        retour = (foundMarker !== null);
+        if (retour) {
+            this.string.incrementPointerPosition(foundMarker.length);
+
+        }
+
+        return (retour);
     }
+
+    private getNextPossibleElement(): IElement {
+
+    }
+
 }
 
