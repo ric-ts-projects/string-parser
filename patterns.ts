@@ -5,7 +5,7 @@
 
 
 import { IPattern } from "./modeles/interfaces/IPattern";
-import { APattern } from "./modeles/Abstracts/APattern";
+import { APattern } from "./modeles/abstractsx/APattern";
 
 import { TypescriptStringPatternsProvider } from "./modeles/concreteClasses/TypescriptStringPatternsProvider";
 import { ILanguageStringPatternsProvider } from "./modeles/interfaces/ILanguageStringPatternsProvider";
