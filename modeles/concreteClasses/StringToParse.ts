@@ -5,7 +5,7 @@ export class StringToParse implements IStringToParse {
     private string: string;
 
     private pointerPosition: number;
-    private lastSavedPointerPosition: number = null;
+    private savedPointerPositions: Array<number> = [];
     private minPointerPosition: number = 0;
     private maxPointerPosition: number;
 
@@ -32,13 +32,18 @@ export class StringToParse implements IStringToParse {
     }    
 
     savePointerPosition(): IStringToParse {
-        this.lastSavedPointerPosition = this.pointerPosition;
+        this.savedPointerPositions.push(this.pointerPosition);
         return(this);
     }
-    
-    restoreSavedPointerPosition(): IStringToParse {
-        if (this.lastSavedPointerPosition !== null) {
-            this.pointerPosition = this.lastSavedPointerPosition;
+    cancelLastSavedPointerPosition(): IStringToParse {
+        if (this.savedPointerPositions.length) {
+           this.savedPointerPositions.pop();
+        }
+        return(this);
+    }    
+    restoreLastSavedPointerPosition(): IStringToParse {
+        if (this.savedPointerPositions.length) {
+            this.pointerPosition = this.savedPointerPositions.pop();
         }
         return(this);
     }    

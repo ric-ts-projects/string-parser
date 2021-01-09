@@ -7,7 +7,8 @@ export interface IStringToParse {
     isPointerAtTheEnd(): boolean;
     
     savePointerPosition(): IStringToParse;
-    restoreSavedPointerPosition(): IStringToParse;
+    cancelLastSavedPointerPosition(): IStringToParse;
+    restoreLastSavedPointerPosition(): IStringToParse;
 
     setPointerPosition(pointerPosition: number): IStringToParse;
     incrementPointerPosition(increment: number): IStringToParse;

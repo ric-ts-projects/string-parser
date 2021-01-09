@@ -22,6 +22,6 @@ export interface IPattern {
     setMaxOccurencesNumber(maxOccurencesNumber: number): IPattern;
     setOccurencesNumbers(minOccurencesNumber: number, maxOccurencesNumber?: number): IPattern;
 
-    getOccurences(stringToParse: IStringToParse): Array<string>;
+    getMatchingOccurences(stringToParse: IStringToParse): Array<string>;
     
 }
