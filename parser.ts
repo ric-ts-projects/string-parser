@@ -112,81 +112,13 @@ export abstract class ATreeBuilder /*implements ITreeBuilder*/ {
 }
 
 
-export interface IStringToParse {
-    setString(string: string): IStringToParse;
 
-    isPointerAtTheEnd(): boolean;
-
-    // resetPointerPosition(pointerPosition: number): IStringToParse;
-    setPointerPosition(pointerPosition: number): IStringToParse;
-    incrementPointerPosition(increment: number): IStringToParse;
-}
 
 export interface IStringParser {
     setString(stringToParse: string): IStringParser;
 }
 
-export class StringToParse implements IStringToParse {
-    private string: string;
 
-    private pointerPosition: number;
-    private minPointerPosition: number = 0;
-    private maxPointerPosition: number;
-
-
-    constructor(string: string = "") {
-        this.setString(string);
-    }
-
-    setString(string: string): IStringToParse {
-        this.string = string;
-        this.setMaxPointerPosition();
-        this.resetPointerPosition();
-        return (this);
-    }
-
-    private setMaxPointerPosition(): IStringToParse {
-        this.maxPointerPosition = this.string.length - 1;
-        return (this);
-    }
-
-    private resetPointerPosition(): IStringToParse {
-        this.setPointerPosition(0);
-        return (this);
-    }
-
-    setPointerPosition(pointerPosition: number): IStringToParse {
-        this.pointerPosition = pointerPosition;
-        this.checkValidPointerPosition();
-        return (this);
-    }
-
-    incrementPointerPosition(increment: number): StringToParse {
-        this.setPointerPosition(this.pointerPosition + increment);
-        return (this);
-    }
-
-    isPointerAtTheEnd(): boolean {
-        const retour: boolean = (this.pointerPosition === this.maxPointerPosition);
-        return (retour);
-    }
-
-    private checkValidPointerPosition(): void {
-        if (this.pointerPosition > this.maxPointerPosition) {
-            throw new Error(this.getPointerPositionOverflowMessage());
-
-        } else if (this.pointerPosition < this.minPointerPosition) {
-            throw new Error(this.getPointerPositionOverflowMessage());
-        }
-    }
-
-    private getPointerPositionOverflowMessage(): string {
-        const retour: string = `Impossible de pointer en position ${this.pointerPosition} ; Intervalle autorisé : ` +
-            `[ ${this.minPointerPosition}, ${this.maxPointerPosition} ].`;
-        return (retour);
-    }
-
-}
 
 
 export abstract class AStringParser /*implements IStringParser*/ {

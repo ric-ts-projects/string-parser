@@ -1,5 +1,5 @@
-import { ILanguageStringPatternsProvider } from "./../interfaces/ILanguageStringPatternsProvider";
-import { ALanguageStringPatternsProvider } from "./../Abstracts/ALanguageStringPatternsProvider";
+import { ILanguageStringPatternsProvider } from "./../interfaces";
+import { ALanguageStringPatternsProvider } from "./../abstracts";
 
 export class TypescriptStringPatternsProvider extends ALanguageStringPatternsProvider
  implements ILanguageStringPatternsProvider {
