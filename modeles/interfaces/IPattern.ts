@@ -7,21 +7,25 @@ export interface IPattern {
     addStringPattern(stringPattern: string): IPattern;
 
     precededBy(
-        precedingByPattern: IPattern, 
-        minOccurencesNumber: number, 
-        maxOccurencesNumber?: number
+        precedingPattern: IPattern | Array<IPattern>
     ): IPattern;
+    getPrecedingPatterns(): Array<IPattern>;
+
     followedBy(
-        followingPattern: IPattern, 
-        minOccurencesNumber: number, 
-        maxOccurencesNumber?: number
+        followingPattern: IPattern | Array<IPattern>
     ): IPattern;
+    getFollowingPatterns(): Array<IPattern>;
 
     setCaseSensitive(caseSensitive: boolean): IPattern;
+
     setMinOccurencesNumber(minOccurencesNumber: number): IPattern;
+    getMinOccurencesNumber(): number;
     setMaxOccurencesNumber(maxOccurencesNumber: number): IPattern;
+    getMaxOccurencesNumber(): number;
+    isDefinedMaxOccurencesNumber(): boolean;
     setOccurencesNumbers(minOccurencesNumber: number, maxOccurencesNumber?: number): IPattern;
 
-    getMatchingOccurences(stringToParse: IStringToParse): Array<string>;
+    //@return {string | null} null si échec du match.
+    getStringToParseMatchingOneStringPattern(stringToParse: string): (string | null);
     
 }

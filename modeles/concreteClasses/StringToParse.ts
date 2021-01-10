@@ -21,10 +21,10 @@ export class StringToParse implements IStringToParse {
         return (this);
     }
 
-    // getRemainingStringToParse(): string {
-    //     const retour: string = this.string.substr(this.pointerPosition);
-    //     return(retour);
-    // }
+    getRemainingStringToParse(): string {
+        const retour: string = this.string.substr(this.pointerPosition);
+        return(retour);
+    }
 
     getStringFromPointerPosition(lengthToRead: number): string {
         const retour: string = this.string.substr(this.pointerPosition, lengthToRead);
@@ -62,6 +62,9 @@ export class StringToParse implements IStringToParse {
         this.pointerPosition = pointerPosition;
         this.checkValidPointerPosition();
         return (this);
+    }
+    getPointerPosition(): number {
+        return(this.pointerPosition);
     }
 
     incrementPointerPosition(increment: number): StringToParse {

@@ -2,7 +2,7 @@ export interface IStringToParse {
     
     setString(string: string): IStringToParse;
     getStringFromPointerPosition(lengthToRead: number): string;
-    // getRemainingStringToParse(): string;
+    getRemainingStringToParse(): string;
     
     isPointerAtTheEnd(): boolean;
     
@@ -11,5 +11,6 @@ export interface IStringToParse {
     restoreLastSavedPointerPosition(): IStringToParse;
 
     setPointerPosition(pointerPosition: number): IStringToParse;
+    getPointerPosition(): number;
     incrementPointerPosition(increment: number): IStringToParse;
 }

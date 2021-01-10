@@ -1,7 +1,7 @@
 // tslint:disable:curly
 import { TypesTester } from "./../../_modules";
 
-import { IPattern, IStringToParse } from "./../interfaces";
+import { IPattern } from "./../interfaces";
 
 
 export abstract class APattern implements IPattern {
@@ -11,9 +11,8 @@ export abstract class APattern implements IPattern {
 
     private static caseSensitive: boolean = true;
 
-    private precedingByPattern: IPattern = null;
-    private followingPattern: IPattern = null;
-    private allGetMatchingOccurencesMethods: Array<Function> = [];
+    private precedingPatterns: Array<IPattern> = [];
+    private followingPatterns: Array<IPattern> = [];
 
     private stringPatterns: Array<string> = [];
     private caseSensitive: boolean = true;
@@ -29,35 +28,25 @@ export abstract class APattern implements IPattern {
         }
 
         this.setDefaultCaseSensitivity();
-        this.defineAllGetMatchingOccurencesMethods();
-
     }
-    
+
     private setDefaultCaseSensitivity(): void {
         this.setCaseSensitive(APattern.caseSensitive);
 
     }
 
-    private defineAllGetMatchingOccurencesMethods(): void {
-        this.allGetMatchingOccurencesMethods = [
-            this.getPrecedingPatternMatchingOccurences,
-            this.getPatternMatchingOccurences,
-            this.getFollowingPatternMatchingOccurences
-        ];
-    }
-
     setCaseSensitive(caseSensitive: boolean): IPattern {
         this.caseSensitive = caseSensitive;
-        return(this);
+        return (this);
     }
 
     static setCaseSensitive(caseSensitive: boolean): void {
         this.caseSensitive = caseSensitive;
-    }    
+    }
 
     setStringPattern(stringPattern: string): IPattern {
-        this.setStringPatterns( Array(stringPattern) );
-        return(this);
+        this.setStringPatterns(Array(stringPattern));
+        return (this);
     }
 
     setStringPatterns(stringPatterns: Array<string>): IPattern {
@@ -65,7 +54,7 @@ export abstract class APattern implements IPattern {
         for (const stringPattern of stringPatterns) {
             this.addStringPattern(stringPattern);
         }
-        return(this);
+        return (this);
     }
 
     addStringPattern(stringPattern: string): IPattern {
@@ -73,204 +62,156 @@ export abstract class APattern implements IPattern {
             this.stringPatterns.push(stringPattern);
 
         } else throw new Error("Not empty string expected.");
-        return(this);
+        return (this);
     }
 
     private resetStringPatterns(): void {
-      this.stringPatterns = [];
+        this.stringPatterns = [];
     }
 
     precededBy(
-        precedingByPattern: IPattern, 
-        minOccurencesNumber: number, 
-        maxOccurencesNumber: number = APattern.PATTERN_MAX_OCCURENCES_NUMBER_NOT_DEFINED
+        precedingPattern: IPattern | Array<IPattern>
     ): IPattern {
-        this.precedingByPattern = precedingByPattern;
-        this.precedingByPattern.setOccurencesNumbers(minOccurencesNumber, maxOccurencesNumber);
-        return(this);
+        if (precedingPattern !== null) {
+            const precedingPatterns: Array<IPattern> =
+                (Array.isArray(precedingPattern)) ?
+                    precedingPattern
+                    :
+                    Array(precedingPattern)
+                ;
+
+            this.addPrecedingPatterns(precedingPatterns);
+        }
+        return (this);
     }
+    private addPrecedingPatterns(precedingPatterns: Array<IPattern>): void {
+        if (precedingPatterns !== null) {
+            precedingPatterns.reverse();
+            for (const precedingPattern of precedingPatterns) {
+                this.addPrecedingPattern(precedingPattern);
+            }
+        }
+    }
+    private addPrecedingPattern(precedingPattern: IPattern): void {
+        if (precedingPattern !== null && precedingPattern !== this) {
+            this.precedingPatterns.unshift(precedingPattern);
+        }
+    }
+    getPrecedingPatterns(): Array<IPattern> {
+        return (this.precedingPatterns);
+    }
+
     followedBy(
-        followingPattern: IPattern, 
-        minOccurencesNumber: number, 
-        maxOccurencesNumber: number = APattern.PATTERN_MAX_OCCURENCES_NUMBER_NOT_DEFINED
+        followingPattern: IPattern | Array<IPattern>
     ): IPattern {
-        this.followingPattern = followingPattern;
-        this.followingPattern.setOccurencesNumbers(minOccurencesNumber, maxOccurencesNumber);
-        return(this);
+        if (followingPattern !== null) {
+            const followingPatterns: Array<IPattern> =
+                (Array.isArray(followingPattern)) ?
+                    followingPattern
+                    :
+                    Array(followingPattern)
+                ;
+
+            this.addFollowingPatterns(followingPatterns);
+        }
+        return (this);
     }
+    private addFollowingPatterns(followingPatterns: Array<IPattern>): void {
+        if (followingPatterns !== null) {
+            for (const followingPattern of followingPatterns) {
+                this.addFollowingPattern(followingPattern);
+            }
+        }
+    }
+    private addFollowingPattern(followingPattern: IPattern): void {
+        if (followingPattern !== null && followingPattern !== this) {
+            this.followingPatterns.push(followingPattern);
+        }
+    }
+    getFollowingPatterns(): Array<IPattern> {
+        return (this.followingPatterns);
+    }
+
 
     setMinOccurencesNumber(minOccurencesNumber: number): IPattern {
         this.minOccurencesNumber = minOccurencesNumber;
         this.checkValidNbOccurences();
-        return(this);
+        return (this);
+    }
+    getMinOccurencesNumber(): number {
+        return (this.minOccurencesNumber);
     }
     setMaxOccurencesNumber(maxOccurencesNumber: number): IPattern {
         this.minOccurencesNumber = maxOccurencesNumber;
         this.checkValidNbOccurences();
-        return(this);
+        return (this);
+    }
+    getMaxOccurencesNumber(): number {
+        return (this.maxOccurencesNumber);
     }
     setOccurencesNumbers(minOccurencesNumber: number, maxOccurencesNumber: number = APattern.PATTERN_MAX_OCCURENCES_NUMBER_NOT_DEFINED): IPattern {
         this.setMinOccurencesNumber(minOccurencesNumber);
         this.setMaxOccurencesNumber(maxOccurencesNumber);
-        return(this);
+        return (this);
     }
 
-    getMatchingOccurences(stringToParse: IStringToParse): (Array<string> | null) {
-        let retour: Array<string> = [];
-
-        stringToParse.savePointerPosition();
-        
-        let matchingOccurences: Array<string>;
-        for(let getMatchingOccurencesMethod of this.allGetMatchingOccurencesMethods) {
-            getMatchingOccurencesMethod = getMatchingOccurencesMethod.bind(this);
-            matchingOccurences = getMatchingOccurencesMethod(stringToParse);
-            if ( matchingOccurences === null ) {
-                break;
-            }         
-            retour = retour.concat( matchingOccurences );
-        }
-        
-        if ( matchingOccurences === null ) {
-            retour = null;
-            stringToParse.restoreLastSavedPointerPosition();
-
-        } else {
-            stringToParse.cancelLastSavedPointerPosition();
-        }
-
-        return(retour);
-    }
-
-    private getPrecedingPatternMatchingOccurences(stringToParse: IStringToParse): (Array<string> | null) {
-        const retour: Array<string> = (this.precedingByPattern !== null) ?
-                                        this.precedingByPattern.getMatchingOccurences(stringToParse)
-                                      :
-                                        []
-                                      ;
-        return(retour);
-    }
-
-    private getFollowingPatternMatchingOccurences(stringToParse: IStringToParse): (Array<string> | null) {
-        const retour: Array<string> = (this.followingPattern !== null) ?
-                                        this.followingPattern.getMatchingOccurences(stringToParse)
-                                      :
-                                        []
-                                      ;
-        return(retour);
-    }    
-
-    //@return {Array<string> | null} null si échec du match.
-    private getPatternMatchingOccurences(stringToParse: IStringToParse): (Array<string> | null) {
-        let retour: Array<string> = null;
-        if (!stringToParse.isPointerAtTheEnd()) {
-            let isBadMatchingOccurencesNumber: boolean = false;
-    
-            let stringToParseMatchingOneStringPattern: string;
-            let isStringToParseMatchingOneStringPattern: boolean;
-
-            retour = [];
-            stringToParse.savePointerPosition();
-            do {
-                stringToParseMatchingOneStringPattern = this.getStringToParseMatchingOneStringPattern(stringToParse);
-                
-                isStringToParseMatchingOneStringPattern = (stringToParseMatchingOneStringPattern !== null);
-                if (isStringToParseMatchingOneStringPattern)  {
-
-                    retour.push(stringToParseMatchingOneStringPattern);
-                    
-                    isBadMatchingOccurencesNumber = this.hasFoundTooManyMatchingOccurences(retour);
-    
-                    stringToParse.incrementPointerPosition(stringToParseMatchingOneStringPattern.length);
-                }            
-    
-            } while(isStringToParseMatchingOneStringPattern && !isBadMatchingOccurencesNumber && !stringToParse.isPointerAtTheEnd());
-    
-    
-            if (!isBadMatchingOccurencesNumber) {
-                isBadMatchingOccurencesNumber = this.hasFoundNotEnoughMatchingOccurences(retour);
-            }
-    
-            if (isBadMatchingOccurencesNumber) {
-                retour = null;
-                stringToParse.restoreLastSavedPointerPosition();
-
-            } else {
-                stringToParse.cancelLastSavedPointerPosition();
-
-            }
-        }        
-        return(retour);
-    }
-
-    private getStringToParseMatchingOneStringPattern(stringToParse: IStringToParse): (string | null) {
+    //@return {string | null} null si échec du match.
+    getStringToParseMatchingOneStringPattern(stringToParse: string): (string | null) {
         let retour: string = null;
 
-        for(const stringPattern of this.stringPatterns) {
+        for (const stringPattern of this.stringPatterns) {
             retour = this.getStringToParseMatchingStringPattern(stringToParse, stringPattern);
 
             if (retour !== null) {
                 break;
             }
-    
-        }    
 
-        return(retour);
-    }
-
-    private getStringToParseMatchingStringPattern(stringToParse: IStringToParse, stringPattern: string): (string | null) {
-      let retour: string;
-      
-      let matching: boolean;
-      const stringToParseStart: string = stringToParse.getStringFromPointerPosition(stringPattern.length);
-      if (this.caseSensitive) {
-        matching = (stringToParseStart === stringPattern);
-
-      } else {
-        matching = (stringToParseStart.toUpperCase() === stringPattern.toUpperCase());
-
-      }
-
-      retour = (matching)? stringToParseStart : null;
-
-      return(retour);
-    }
-
-    private hasFoundTooManyMatchingOccurences(matchingOccurences: Array<string>): boolean {
-        let retour: boolean = false;
-
-        if (this.isDefinedMaxOccurencesNumber()) {
-            retour = (matchingOccurences.length > this.maxOccurencesNumber);
         }
 
-        return(retour);
+        return (retour);
     }
 
-    private hasFoundNotEnoughMatchingOccurences(matchingOccurences: Array<string>): boolean {
-        const retour: boolean =  (matchingOccurences.length < this.minOccurencesNumber);
-        return(retour);
-    }    
+    //@return {string | null} null si échec du match.
+    private getStringToParseMatchingStringPattern(stringToParse: string, stringPattern: string): (string | null) {
+        let retour: string;
 
-    private isDefinedMaxOccurencesNumber(): boolean {
-        const retour: boolean = (this.maxOccurencesNumber !==APattern.PATTERN_MAX_OCCURENCES_NUMBER_NOT_DEFINED);
-        return(retour);
+        let matching: boolean;
+        let stringToParseStart: string = stringToParse.substr(0, stringPattern.length);
+        let stringToParseStartToCompare: string = stringToParseStart;
+
+        if (!this.caseSensitive) {
+            stringPattern = stringPattern.toUpperCase();
+            stringToParseStartToCompare = stringToParseStartToCompare.toUpperCase();
+        }
+
+        matching = (stringToParseStartToCompare === stringPattern);
+
+        retour = (matching) ? stringToParseStart : null;
+
+        return (retour);
+    }
+
+    isDefinedMaxOccurencesNumber(): boolean {
+        const retour: boolean = (this.maxOccurencesNumber !== APattern.PATTERN_MAX_OCCURENCES_NUMBER_NOT_DEFINED);
+        return (retour);
     }
 
 
     private checkValidNbOccurences(): void {
-      const ok: boolean = this.testValidNbOccurences();
-      if (!ok) {
-          throw new Error(`Nombre d'occurences min=${this.minOccurencesNumber} ou max=${this.maxOccurencesNumber}, invalide.`);
-      }
+        const ok: boolean = this.testValidNbOccurences();
+        if (!ok) {
+            throw new Error(`Nombre d'occurences min=${this.minOccurencesNumber} ou max=${this.maxOccurencesNumber}, invalide.`);
+        }
     }
     private testValidNbOccurences(): boolean {
         const retour: boolean = (
-                                        (this.minOccurencesNumber >=0)
-                                    &&
-                                        (this.maxOccurencesNumber <= APattern.PATTERN_MAX_OCCURENCES_NUMBER)
-                                    &&
-                                        (this.maxOccurencesNumber >= this.minOccurencesNumber)
-                                );
-        return(retour);
+            (this.minOccurencesNumber >= 0)
+            &&
+            (this.maxOccurencesNumber <= APattern.PATTERN_MAX_OCCURENCES_NUMBER)
+            &&
+            (this.maxOccurencesNumber >= this.minOccurencesNumber)
+        );
+        return (retour);
     }
 
 }
