@@ -1,4 +1,4 @@
-import { IEntity, IComparator } from './interfaces';
+import { IEntity, IComparator } from './../interfaces';
 
 export class EntityComparator implements IComparator<IEntity> {
     

@@ -1,4 +1,5 @@
-import { IStringComparator } from './interfaces';
+import { IStringComparator } from './../interfaces';
+
 
 export class StringComparator implements IStringComparator {
 

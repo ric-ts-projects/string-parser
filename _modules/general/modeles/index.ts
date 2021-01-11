@@ -1,7 +1,5 @@
 export * from './interfaces';
+export * from './concreteClasses';
 export * from './types';
 
 
-export * from './TypesTester';
-
-export * from './GenericList';

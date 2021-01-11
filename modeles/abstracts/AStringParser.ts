@@ -112,17 +112,17 @@ export abstract class AStringParser {
     }
 
 
-    private createPatternMatchingOccurence(
-        pattern: IPattern, 
-        stringToParseMatching: string,
-        stringToParsePointerPosition: number, 
-    ): IPatternMatchingOccurence {
-        const result: IPatternMatchingOccurence = new PatternMatchingOccurence(
-            pattern, 
-            stringToParseMatching,
-            stringToParsePointerPosition
-        );
-        return(result);
-    }
+    // private createPatternMatchingOccurence(
+    //     pattern: IPattern, 
+    //     stringToParseMatching: string,
+    //     stringToParsePointerPosition: number, 
+    // ): IPatternMatchingOccurence {
+    //     const result: IPatternMatchingOccurence = new PatternMatchingOccurence(
+    //         pattern, 
+    //         stringToParseMatching,
+    //         stringToParsePointerPosition
+    //     );
+    //     return(result);
+    // }
 
 }

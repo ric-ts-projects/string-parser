@@ -1,9 +1,10 @@
-import { IPatternMatchingOccurence, IPattern } from './../interfaces';
-import { Pattern } from '../../patterns';
+import { IPattern, IStringToParseMatching } from "./../interfaces";
 
-export class PatternMatchingOccurence implements IPatternMatchingOccurence {
+
+export class StringToParseMatching implements IStringToParseMatching {
 
     constructor(
+        private masterPattern: IPattern,
         private pattern: IPattern, 
         private stringToParseMatching: string,
         private stringToParsePointerPosition: number
@@ -11,6 +12,9 @@ export class PatternMatchingOccurence implements IPatternMatchingOccurence {
 
     }
 
+    getMasterPattern(): IPattern {
+        return(this.masterPattern);
+    }    
     getPattern(): IPattern {
         return(this.pattern);
     }
@@ -24,4 +28,4 @@ export class PatternMatchingOccurence implements IPatternMatchingOccurence {
         return(this.stringToParsePointerPosition);
     }
 
-}    
+}

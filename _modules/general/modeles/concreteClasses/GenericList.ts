@@ -1,5 +1,5 @@
-import { IComparator } from './interfaces';
-import { FilterType } from './types';
+import { IComparator } from './../interfaces';
+import { FilterType } from './../types';
 
 
 
@@ -240,7 +240,7 @@ export class GenericList<ElementType> {
 
     each<CallBackReturnType>( 
         fCallBack: ((element: ElementType, index?: number) => CallBackReturnType),
-        fTreatCallBackReturnedValue: ((callBackReturnedValue: CallBackReturnType) => any) = null,
+        fTreatCallBackReturnedValue: ((element: ElementType, callBackReturnedValue: CallBackReturnType) => any) = null,
         fBreakLoop: ((callBackReturnedValue: CallBackReturnType) => boolean) = null
     ): void {
         if (fCallBack !== null) {
@@ -251,7 +251,7 @@ export class GenericList<ElementType> {
                 callBackReturnedValue = fCallBack(element, index++);
 
                 if (fTreatCallBackReturnedValue !== null) {
-                    fTreatCallBackReturnedValue(callBackReturnedValue);
+                    fTreatCallBackReturnedValue(element, callBackReturnedValue);
                 }
 
                 if (fBreakLoop !== null) {
