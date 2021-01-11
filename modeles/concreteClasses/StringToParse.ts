@@ -22,13 +22,13 @@ export class StringToParse implements IStringToParse {
     }
 
     getRemainingStringToParse(): string {
-        const retour: string = this.string.substr(this.pointerPosition);
-        return(retour);
+        const result: string = this.string.substr(this.pointerPosition);
+        return(result);
     }
 
     getStringFromPointerPosition(lengthToRead: number): string {
-        const retour: string = this.string.substr(this.pointerPosition, lengthToRead);
-        return(retour);
+        const result: string = this.string.substr(this.pointerPosition, lengthToRead);
+        return(result);
     }    
 
     savePointerPosition(): IStringToParse {
@@ -73,8 +73,8 @@ export class StringToParse implements IStringToParse {
     }
 
     isPointerAtTheEnd(): boolean {
-        const retour: boolean = (this.pointerPosition === this.maxPointerPosition);
-        return (retour);
+        const result: boolean = (this.pointerPosition === this.maxPointerPosition);
+        return (result);
     }
 
     private checkValidPointerPosition(): void {
@@ -87,9 +87,9 @@ export class StringToParse implements IStringToParse {
     }
 
     private getPointerPositionOverflowMessage(): string {
-        const retour: string = `Impossible de pointer en position ${this.pointerPosition} ; Intervalle autorisé : ` +
+        const result: string = `Impossible de pointer en position ${this.pointerPosition} ; Intervalle autorisé : ` +
             `[ ${this.minPointerPosition}, ${this.maxPointerPosition} ].`;
-        return (retour);
+        return (result);
     }
 
 }

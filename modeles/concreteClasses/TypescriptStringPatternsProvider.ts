@@ -5,30 +5,30 @@ export class TypescriptStringPatternsProvider extends ALanguageStringPatternsPro
  implements ILanguageStringPatternsProvider {
 
     getExportKeyword(): string {
-        const retour: string = "export";
-        return(retour);
+        const result: string = "export";
+        return(result);
     }
 
     private getAbstractKeyword(): string {
-        const retour: string = "abstract";
-        return(retour);
+        const result: string = "abstract";
+        return(result);
     }
     getAbstractClassKeyword(): string {
-        const retour: string = this.getAbstractKeyword();
-        return(retour);
+        const result: string = this.getAbstractKeyword();
+        return(result);
     }
     getAbstractMemberKeyword(): string {
-        const retour: string = this.getAbstractKeyword();
-        return(retour);
+        const result: string = this.getAbstractKeyword();
+        return(result);
     }
     getAbstractMethodKeyword(): string {
-        const retour: string = this.getAbstractKeyword();
-        return(retour);
+        const result: string = this.getAbstractKeyword();
+        return(result);
     }
 
     getClassKeyword(): string {
-        const retour: string = "class";
-        return(retour);
+        const result: string = "class";
+        return(result);
     }
 
 }

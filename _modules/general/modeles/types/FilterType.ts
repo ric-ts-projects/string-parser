@@ -1,0 +1,1 @@
+export type FilterType<T> = (item: T, index?: number) => boolean;

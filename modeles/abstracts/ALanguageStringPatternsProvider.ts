@@ -2,39 +2,39 @@
 export abstract class ALanguageStringPatternsProvider {
 
    getSpace(): string {
-       const retour: string = " ";
-       return(retour);
+       const result: string = " ";
+       return(result);
    }
 
    getCR(): string {
-       const retour: string = "\n";
-       return(retour);
+       const result: string = "\n";
+       return(result);
    }
    getLF(): string {
-       const retour: string = "\r";
-       return(retour);
+       const result: string = "\r";
+       return(result);
    }
 
     getLineCommentStart(): string {
-        const retour: string = "//";
-        return(retour);
+        const result: string = "//";
+        return(result);
     }
     getBlockCommentStart(): string {
-        const retour: string = "/*";
-        return(retour);
+        const result: string = "/*";
+        return(result);
     }
     getBlockCommentEnd(): string {
-        const retour: string = "*/";
-        return(retour);
+        const result: string = "*/";
+        return(result);
     }
 
     getStringDelimiter(): string {
-        const retour: string = "\"";
-        return(retour);
+        const result: string = "\"";
+        return(result);
     }
     getStringDelimiterAlias(): string {
-        const retour: string = "'";
-        return(retour);
+        const result: string = "'";
+        return(result);
     }
 
 }

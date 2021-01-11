@@ -5,7 +5,7 @@ export abstract class AStringParser {
 
     //@return {Array<IPatternMatchingOccurence> | null} null si échec du match.
     getPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse): (Array<IPatternMatchingOccurence> | null) {
-        let retour: Array<IPatternMatchingOccurence> = [];
+        let result: Array<IPatternMatchingOccurence> = [];
 
         stringToParse.savePointerPosition();
 
@@ -28,25 +28,25 @@ export abstract class AStringParser {
             if ( matchingOccurences === null ) {
                 break;
             }         
-            retour = retour.concat( matchingOccurences );
+            result = result.concat( matchingOccurences );
         }
         
         if ( matchingOccurences === null ) {
-            retour = null;
+            result = null;
             stringToParse.restoreLastSavedPointerPosition();
 
         } else {
             stringToParse.cancelLastSavedPointerPosition();
         }
 
-        return(retour);
+        return(result);
     }
 
     //@return {Array<IPatternMatchingOccurence> | null} null si échec du match.
     private getCentralPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse)
         : (Array<IPatternMatchingOccurence> | null) {
 
-        let retour: Array<IPatternMatchingOccurence> = null;
+        let result: Array<IPatternMatchingOccurence> = null;
         if (!stringToParse.isPointerAtTheEnd()) {
             let isBadMatchingOccurencesNumber: boolean = false;
     
@@ -54,7 +54,7 @@ export abstract class AStringParser {
             let patternMatchingOccurence: IPatternMatchingOccurence;
             let isStringToParseMatchingOneStringPattern: boolean;
 
-            retour = [];
+            result = [];
             stringToParse.savePointerPosition();
             do {
                 stringToParseMatchingOneStringPattern = centralPattern.getStringToParseMatchingOneStringPattern(
@@ -69,9 +69,9 @@ export abstract class AStringParser {
                         stringToParseMatchingOneStringPattern,
                         stringToParse.getPointerPosition()
                     );
-                    retour.push(patternMatchingOccurence);
+                    result.push(patternMatchingOccurence);
                     
-                    isBadMatchingOccurencesNumber = this.hasFoundTooManyMatchingOccurences(centralPattern, retour);
+                    isBadMatchingOccurencesNumber = this.hasFoundTooManyMatchingOccurences(centralPattern, result);
     
                     stringToParse.incrementPointerPosition(stringToParseMatchingOneStringPattern.length);
                 }            
@@ -80,11 +80,11 @@ export abstract class AStringParser {
     
     
             if (!isBadMatchingOccurencesNumber) {
-                isBadMatchingOccurencesNumber = this.hasFoundNotEnoughMatchingOccurences(centralPattern, retour);
+                isBadMatchingOccurencesNumber = this.hasFoundNotEnoughMatchingOccurences(centralPattern, result);
             }
     
             if (isBadMatchingOccurencesNumber) {
-                retour = null;
+                result = null;
                 stringToParse.restoreLastSavedPointerPosition();
 
             } else {
@@ -93,22 +93,22 @@ export abstract class AStringParser {
             }
         }        
 
-        return(retour);
+        return(result);
     }
     
     private hasFoundTooManyMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IPatternMatchingOccurence>): boolean {
-        let retour: boolean = false;
+        let result: boolean = false;
 
         if (pattern.isDefinedMaxOccurencesNumber()) {
-            retour = (matchingOccurences.length > pattern.getMaxOccurencesNumber());
+            result = (matchingOccurences.length > pattern.getMaxOccurencesNumber());
         }
 
-        return(retour);
+        return(result);
     }
 
     private hasFoundNotEnoughMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IPatternMatchingOccurence>): boolean {
-        const retour: boolean =  (matchingOccurences.length < pattern.getMinOccurencesNumber());
-        return(retour);
+        const result: boolean =  (matchingOccurences.length < pattern.getMinOccurencesNumber());
+        return(result);
     }
 
 
@@ -117,12 +117,12 @@ export abstract class AStringParser {
         stringToParseMatching: string,
         stringToParsePointerPosition: number, 
     ): IPatternMatchingOccurence {
-        const retour: IPatternMatchingOccurence = new PatternMatchingOccurence(
+        const result: IPatternMatchingOccurence = new PatternMatchingOccurence(
             pattern, 
             stringToParseMatching,
             stringToParsePointerPosition
         );
-        return(retour);
+        return(result);
     }
 
 }
