@@ -1,11 +1,14 @@
-import { IPattern, IPatternMatchingOccurence, IStringToParse } from "./../interfaces";
-import { PatternMatchingOccurence } from "./PatternMatchingOccurence";
+import { IPattern, IStringToParseMatching, IStringToParse } from "./../interfaces";
+import { StringToParseMatchingArrayOrNull } from "./../types";
+
 
 export abstract class AStringParser {
 
-    //@return {Array<IPatternMatchingOccurence> | null} null si échec du match.
-    getPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse): (Array<IPatternMatchingOccurence> | null) {
-        let result: Array<IPatternMatchingOccurence> = [];
+    //@return {Array<IStringToParseMatching> | null} null if matching fails.
+    getPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse)
+        : StringToParseMatchingArrayOrNull {
+
+        let result: Array<IStringToParseMatching> = [];
 
         stringToParse.savePointerPosition();
 
@@ -18,10 +21,10 @@ export abstract class AStringParser {
                                             .concat(centralPatternFollowingPatterns)
                                             ;
         
-        let matchingOccurences: Array<IPatternMatchingOccurence>;
+        let matchingOccurences: Array<IStringToParseMatching>;
         for(const pattern of allPatterns) {
             matchingOccurences = (pattern === centralPattern) ?
-                                     this.getCentralPatternMatchingOccurences(pattern, stringToParse)
+                                     this.getPatternStringToParseMatchings(pattern, stringToParse)
                                  :
                                      this.getPatternMatchingOccurences(pattern, stringToParse)
                                  ;
@@ -42,45 +45,39 @@ export abstract class AStringParser {
         return(result);
     }
 
-    //@return {Array<IPatternMatchingOccurence> | null} null si échec du match.
-    private getCentralPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse)
-        : (Array<IPatternMatchingOccurence> | null) {
+    //@return {Array<IStringToParseMatching> | null} null if matching fails.
+    private getPatternStringToParseMatchings(pattern: IPattern, stringToParse: IStringToParse)
+        : StringToParseMatchingArrayOrNull {
 
-        let result: Array<IPatternMatchingOccurence> = null;
+        let result: StringToParseMatchingArrayOrNull = null;
         if (!stringToParse.isPointerAtTheEnd()) {
             let isBadMatchingOccurencesNumber: boolean = false;
     
-            let stringToParseMatchingOneStringPattern: string;
-            let patternMatchingOccurence: IPatternMatchingOccurence;
-            let isStringToParseMatchingOneStringPattern: boolean;
+            let stringToParseMatchings: StringToParseMatchingArrayOrNull;
+            let isStringToParseMatchings: boolean;
 
             result = [];
             stringToParse.savePointerPosition();
             do {
-                stringToParseMatchingOneStringPattern = centralPattern.getStringToParseMatchingOneStringPattern(
-                    stringToParse.getRemainingStringToParse()
+                stringToParseMatchings = pattern.getStringToParseMatchings(
+                    stringToParse
                 );
                 
-                isStringToParseMatchingOneStringPattern = (stringToParseMatchingOneStringPattern !== null);
-                if (isStringToParseMatchingOneStringPattern)  {
+                isStringToParseMatchings = (stringToParseMatchings !== null);
+                if (isStringToParseMatchings)  {
 
-                    patternMatchingOccurence = this.createPatternMatchingOccurence(
-                        centralPattern, 
-                        stringToParseMatchingOneStringPattern,
-                        stringToParse.getPointerPosition()
-                    );
-                    result.push(patternMatchingOccurence);
+                    result = result.concat( stringToParseMatchings );
                     
-                    isBadMatchingOccurencesNumber = this.hasFoundTooManyMatchingOccurences(centralPattern, result);
+                    isBadMatchingOccurencesNumber = this.hasFoundTooManyMatchingOccurences(pattern, result);
     
-                    stringToParse.incrementPointerPosition(stringToParseMatchingOneStringPattern.length);
+                    stringToParse.incrementPointerPosition(stringToParseMatchingOneStringPattern.length); ???
                 }            
     
-            } while(isStringToParseMatchingOneStringPattern && !isBadMatchingOccurencesNumber && !stringToParse.isPointerAtTheEnd());
+            } while(isStringToParseMatchings??? && !isBadMatchingOccurencesNumber && !stringToParse.isPointerAtTheEnd());
     
     
             if (!isBadMatchingOccurencesNumber) {
-                isBadMatchingOccurencesNumber = this.hasFoundNotEnoughMatchingOccurences(centralPattern, result);
+                isBadMatchingOccurencesNumber = this.hasFoundNotEnoughMatchingOccurences(pattern, result);
             }
     
             if (isBadMatchingOccurencesNumber) {
@@ -96,7 +93,7 @@ export abstract class AStringParser {
         return(result);
     }
     
-    private hasFoundTooManyMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IPatternMatchingOccurence>): boolean {
+    private hasFoundTooManyMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IStringToParseMatching>): boolean {
         let result: boolean = false;
 
         if (pattern.isDefinedMaxOccurencesNumber()) {
@@ -106,23 +103,9 @@ export abstract class AStringParser {
         return(result);
     }
 
-    private hasFoundNotEnoughMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IPatternMatchingOccurence>): boolean {
+    private hasFoundNotEnoughMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IStringToParseMatching>): boolean {
         const result: boolean =  (matchingOccurences.length < pattern.getMinOccurencesNumber());
         return(result);
     }
-
-
-    // private createPatternMatchingOccurence(
-    //     pattern: IPattern, 
-    //     stringToParseMatching: string,
-    //     stringToParsePointerPosition: number, 
-    // ): IPatternMatchingOccurence {
-    //     const result: IPatternMatchingOccurence = new PatternMatchingOccurence(
-    //         pattern, 
-    //         stringToParseMatching,
-    //         stringToParsePointerPosition
-    //     );
-    //     return(result);
-    // }
 
 }
