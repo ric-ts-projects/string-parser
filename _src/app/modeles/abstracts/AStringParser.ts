@@ -6,45 +6,45 @@ import { StringToParseMatchingsList } from "../concreteClasses";
 export abstract class AStringParser {
 
     //@return {Array<IStringToParseMatching> | null} null if matching fails.
-    getPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse)
-        : StringToParseMatchingsListOrNull {
+    // getPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse)
+    //     : StringToParseMatchingsListOrNull {
 
-        let result: Array<IStringToParseMatching> = [];
+    //     let result: Array<IStringToParseMatching> = [];
 
-        stringToParse.savePointerPosition();
+    //     stringToParse.savePointerPosition();
 
-        const centralPatternPrecedingPatterns: Array<IPattern> = centralPattern.getPrecedingPatterns();
-        const centralPatternFollowingPatterns: Array<IPattern> = centralPattern.getFollowingPatterns();
+    //     const centralPatternPrecedingPatterns: Array<IPattern> = centralPattern.getPrecedingPatterns();
+    //     const centralPatternFollowingPatterns: Array<IPattern> = centralPattern.getFollowingPatterns();
 
-        const allPatterns: Array<IPattern> = []
-                                            .concat(centralPatternPrecedingPatterns)
-                                            .concat(centralPattern)
-                                            .concat(centralPatternFollowingPatterns)
-                                            ;
+    //     const allPatterns: Array<IPattern> = []
+    //                                         .concat(centralPatternPrecedingPatterns)
+    //                                         .concat(centralPattern)
+    //                                         .concat(centralPatternFollowingPatterns)
+    //                                         ;
         
-        let matchingOccurences: Array<IStringToParseMatching>;
-        for(const pattern of allPatterns) {
-            matchingOccurences = (pattern === centralPattern) ?
-                                     this.getPatternStringToParseMatchings(pattern, stringToParse)
-                                 :
-                                     this.getPatternMatchingOccurences(pattern, stringToParse)
-                                 ;
-            if ( matchingOccurences === null ) {
-                break;
-            }         
-            result = result.concat( matchingOccurences );
-        }
+    //     let matchingOccurences: Array<IStringToParseMatching>;
+    //     for(const pattern of allPatterns) {
+    //         matchingOccurences = (pattern === centralPattern) ?
+    //                                  this.getPatternStringToParseMatchings(pattern, stringToParse)
+    //                              :
+    //                                  this.getPatternMatchingOccurences(pattern, stringToParse)
+    //                              ;
+    //         if ( matchingOccurences === null ) {
+    //             break;
+    //         }         
+    //         result = result.concat( matchingOccurences );
+    //     }
         
-        if ( matchingOccurences === null ) {
-            result = null;
-            stringToParse.restoreLastSavedPointerPosition();
+    //     if ( matchingOccurences === null ) {
+    //         result = null;
+    //         stringToParse.restoreLastSavedPointerPosition();
 
-        } else {
-            stringToParse.cancelLastSavedPointerPosition();
-        }
+    //     } else {
+    //         stringToParse.cancelLastSavedPointerPosition();
+    //     }
 
-        return(result);
-    }
+    //     return(result);
+    // }
 
     //@return {Array<IStringToParseMatching> | null} null if matching fails.
     private getPatternStringToParseMatchings(pattern: IPattern, stringToParse: IStringToParse)
@@ -77,7 +77,7 @@ export abstract class AStringParser {
                     stringToParse.incrementPointerPosition(stringToParseMatchings.getTotalLength());
                 }            
     
-            } while(isStringToParseMatchings??? && !isBadMatchingOccurencesNumber && !stringToParse.isPointerAtTheEnd());
+            } while(isStringToParseMatchings && !isBadMatchingOccurencesNumber && !stringToParse.isPointerAtTheEnd());
     
     
             if (!isBadMatchingOccurencesNumber) {
