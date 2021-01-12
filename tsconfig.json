@@ -21,7 +21,7 @@
                                 //Sinon vaut     : "Node" 
                                 
 
-    ,"traceResolution": true //Permet d'avoir (en console), le détail des tentatives de résolution de path 
+    ,"traceResolution": false //Permet d'avoir (en console), le détail des tentatives de résolution de path 
                              //lorsque le compilo. cherche à trouver dans l'arborescence les 
                              //modules qu'on lui demande d'importer.
                              //Rem.: les ambient modules n'apparaîtront pas dans la recherche.
@@ -62,6 +62,12 @@
     //            2b- aucun élément du tableau associé ne match, alors la recherche avec paths est abandonnée
     //                ET la recherche avec baseUrl toute seule est AUSSI abandonnée !! <<<<<<
     ,"paths": {
+      "@parserLib": [
+        "_src/app/modeles"
+      ],
+      "@commonLib": [
+        "_src/app/_modules"
+      ],      
     }
 
     //REMARQUE : si l'emplacement de modules a réussi à être résolu via 'baseUrl' ou 'baseUrl couplé à paths',
