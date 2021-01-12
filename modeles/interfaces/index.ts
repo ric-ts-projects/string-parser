@@ -9,5 +9,6 @@ export * from './IPatternsList';
 
 export * from './IStringToParse';
 export * from './IStringToParseMatching';
+export * from './IStringToParseMatchingsList';
 
 export * from './IStringParser';

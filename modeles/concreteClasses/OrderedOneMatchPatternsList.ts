@@ -1,8 +1,8 @@
-import { StringToParseMatchingArrayOrNull } from "./../types";
+import { StringToParseMatchingsListOrNull } from "./../types";
 import { AOrderedPatternsList } from "./../abstracts";
 
 export class OrderedOneMatchPatternsList extends AOrderedPatternsList {
-    mustStopSearchingMatching(stringToParseMatchings: StringToParseMatchingArrayOrNull): boolean {
+    mustStopSearchingMatching(stringToParseMatchings: StringToParseMatchingsListOrNull): boolean {
         const result: boolean = (stringToParseMatchings !== null);
         return(result);
     }

@@ -1,11 +1,11 @@
 import { IStringToParse } from "./IStringToParse";
-import { StringToParseMatchingArrayOrNull } from "./../types";
+import { StringToParseMatchingsListOrNull } from "./../types";
 
 
 export interface IPattern {
 
     //@return { Array<IStringToParseMatching> | null } null if matching fails.
-    getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingArrayOrNull;
+    getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingsListOrNull;
 
     setMinOccurencesNumber(minOccurencesNumber: number): IPattern;
     getMinOccurencesNumber(): number;

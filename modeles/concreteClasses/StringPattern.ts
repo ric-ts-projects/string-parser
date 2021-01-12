@@ -1,7 +1,7 @@
 import { IStringComparator, StringComparator } from "./../../_modules";
 
 import { IStringPattern, IStringToParse, IStringToParseMatching } from "./../interfaces";
-import { StringToParseMatchingArrayOrNull } from "./../types";
+import { StringToParseMatchingsListOrNull } from "./../types";
 import { ASimplePattern } from "./../abstracts";
 
 
@@ -24,8 +24,8 @@ export class StringPattern extends ASimplePattern implements IStringPattern {
         return(result);
     }
 
-    getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingArrayOrNull {
-        let result: StringToParseMatchingArrayOrNull = null;
+    getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingsListOrNull {
+        let result: StringToParseMatchingsListOrNull = null;
 
         const string: string = this.getString();
         const stringToParseAsString: string = stringToParse.getRemainingStringToParse();
@@ -42,7 +42,7 @@ export class StringPattern extends ASimplePattern implements IStringPattern {
                     stringToParseStart,
                     stringToParse.getPointerPosition()
                 );
-                result = Array(stringToParseMatching);
+                result = this.createStringToParseMatchingsList(Array(stringToParseMatching));
             }
 
         }

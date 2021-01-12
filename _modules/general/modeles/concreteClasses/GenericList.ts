@@ -1,9 +1,9 @@
-import { IComparator } from './../interfaces';
+import { IComparator, IGenericList } from './../interfaces';
 import { FilterType } from './../types';
 
 
 
-export class GenericList<ElementType> {
+export class GenericList<ElementType> implements IGenericList<ElementType> {
     private elements: Array<ElementType>;
     private allowNullElement: boolean = false;
      
@@ -90,10 +90,7 @@ export class GenericList<ElementType> {
         return(result);
     }
     
-    modifyFirstElementMatchingFilter(
-        sourceElement: ElementType, 
-        filter: FilterType<ElementType>
-    ): boolean {
+    modifyFirstElementMatchingFilter(sourceElement: ElementType, filter: FilterType<ElementType>): boolean {
         let result: boolean = false;
         if (sourceElement !== null) {
 
@@ -194,6 +191,14 @@ export class GenericList<ElementType> {
         }
     }
 
+    addElementsFromList(elementsList: IGenericList<ElementType>): void {
+        if (elementsList !== null) {
+            const elements: Array<ElementType> = elementsList.getElements();
+            this.addElements(elements);
+            
+        }        
+    }
+
     addElement(element: ElementType): void {
         if (element !== null || this.allowNullElement) {
             this.elements.push(element);
@@ -240,21 +245,17 @@ export class GenericList<ElementType> {
 
     each<CallBackReturnType>( 
         fCallBack: ((element: ElementType, index?: number) => CallBackReturnType),
-        fTreatCallBackReturnedValue: ((element: ElementType, callBackReturnedValue: CallBackReturnType) => any) = null,
         fBreakLoop: ((callBackReturnedValue: CallBackReturnType) => boolean) = null
     ): void {
         if (fCallBack !== null) {
 
             let index: number = 0;
             let callBackReturnedValue: CallBackReturnType;
+            const isBreakLoopConditionFunction: boolean = (fBreakLoop !== null);
             for (const element of this.elements) {
                 callBackReturnedValue = fCallBack(element, index++);
 
-                if (fTreatCallBackReturnedValue !== null) {
-                    fTreatCallBackReturnedValue(element, callBackReturnedValue);
-                }
-
-                if (fBreakLoop !== null) {
+                if (isBreakLoopConditionFunction) {
                     if (fBreakLoop(callBackReturnedValue)) {
                         break;
                     }

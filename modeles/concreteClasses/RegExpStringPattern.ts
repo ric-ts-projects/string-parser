@@ -1,12 +1,12 @@
 import { IRegExpStringPattern, IStringToParse, IStringToParseMatching } from "./../interfaces";
-import { StringToParseMatchingArrayOrNull } from "./../types";
+import { StringToParseMatchingsListOrNull } from "./../types";
 import { ASimplePattern } from "./../abstracts";
 
 
 export class RegExpStringPattern extends ASimplePattern implements IRegExpStringPattern {
 
-    getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingArrayOrNull {
-        let result: StringToParseMatchingArrayOrNull = null;
+    getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingsListOrNull {
+        let result: StringToParseMatchingsListOrNull = null;
 
         const string: string = this.getString();
         const stringToParseAsString: string = stringToParse.getRemainingStringToParse();
@@ -21,7 +21,7 @@ export class RegExpStringPattern extends ASimplePattern implements IRegExpString
                     match[0],
                     stringToParse.getPointerPosition()
                 );
-                result = Array(stringToParseMatching);
+                result = this.createStringToParseMatchingsList(Array(stringToParseMatching));
             }            
 
         }

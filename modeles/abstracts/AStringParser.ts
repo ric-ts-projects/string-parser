@@ -1,12 +1,13 @@
 import { IPattern, IStringToParseMatching, IStringToParse } from "./../interfaces";
-import { StringToParseMatchingArrayOrNull } from "./../types";
+import { StringToParseMatchingsListOrNull } from "./../types";
+import { StringToParseMatchingsList } from "../concreteClasses";
 
 
 export abstract class AStringParser {
 
     //@return {Array<IStringToParseMatching> | null} null if matching fails.
     getPatternMatchingOccurences(centralPattern: IPattern, stringToParse: IStringToParse)
-        : StringToParseMatchingArrayOrNull {
+        : StringToParseMatchingsListOrNull {
 
         let result: Array<IStringToParseMatching> = [];
 
@@ -47,16 +48,16 @@ export abstract class AStringParser {
 
     //@return {Array<IStringToParseMatching> | null} null if matching fails.
     private getPatternStringToParseMatchings(pattern: IPattern, stringToParse: IStringToParse)
-        : StringToParseMatchingArrayOrNull {
+        : StringToParseMatchingsListOrNull {
 
-        let result: StringToParseMatchingArrayOrNull = null;
+        let result: StringToParseMatchingsListOrNull = null;
         if (!stringToParse.isPointerAtTheEnd()) {
             let isBadMatchingOccurencesNumber: boolean = false;
     
-            let stringToParseMatchings: StringToParseMatchingArrayOrNull;
+            let stringToParseMatchings: StringToParseMatchingsListOrNull;
             let isStringToParseMatchings: boolean;
 
-            result = [];
+            result = new StringToParseMatchingsList();
             stringToParse.savePointerPosition();
             do {
                 stringToParseMatchings = pattern.getStringToParseMatchings(
@@ -66,18 +67,24 @@ export abstract class AStringParser {
                 isStringToParseMatchings = (stringToParseMatchings !== null);
                 if (isStringToParseMatchings)  {
 
-                    result = result.concat( stringToParseMatchings );
+                    result.addElementsFromList( stringToParseMatchings );
                     
-                    isBadMatchingOccurencesNumber = this.hasFoundTooManyMatchingOccurences(pattern, result);
+                    isBadMatchingOccurencesNumber = this.hasFoundTooManyMatchingOccurences(
+                        pattern, 
+                        result.getElementsNumber()
+                    );
     
-                    stringToParse.incrementPointerPosition(stringToParseMatchingOneStringPattern.length); ???
+                    stringToParse.incrementPointerPosition(stringToParseMatchings.getTotalLength());
                 }            
     
             } while(isStringToParseMatchings??? && !isBadMatchingOccurencesNumber && !stringToParse.isPointerAtTheEnd());
     
     
             if (!isBadMatchingOccurencesNumber) {
-                isBadMatchingOccurencesNumber = this.hasFoundNotEnoughMatchingOccurences(pattern, result);
+                isBadMatchingOccurencesNumber = this.hasFoundNotEnoughMatchingOccurences(
+                    pattern, 
+                    result.getElementsNumber()
+                );
             }
     
             if (isBadMatchingOccurencesNumber) {
@@ -93,18 +100,18 @@ export abstract class AStringParser {
         return(result);
     }
     
-    private hasFoundTooManyMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IStringToParseMatching>): boolean {
+    private hasFoundTooManyMatchingOccurences(pattern: IPattern, matchingOccurencesNumber: number): boolean {
         let result: boolean = false;
 
         if (pattern.isDefinedMaxOccurencesNumber()) {
-            result = (matchingOccurences.length > pattern.getMaxOccurencesNumber());
+            result = (matchingOccurencesNumber > pattern.getMaxOccurencesNumber());
         }
 
         return(result);
     }
 
-    private hasFoundNotEnoughMatchingOccurences(pattern: IPattern, matchingOccurences: Array<IStringToParseMatching>): boolean {
-        const result: boolean =  (matchingOccurences.length < pattern.getMinOccurencesNumber());
+    private hasFoundNotEnoughMatchingOccurences(pattern: IPattern, matchingOccurencesNumber: number): boolean {
+        const result: boolean =  (matchingOccurencesNumber < pattern.getMinOccurencesNumber());
         return(result);
     }
 

@@ -7,3 +7,4 @@ export * from './OrderedOneMatchPatternsList';
 
 export * from './StringToParse';
 export * from './StringToParseMatching';
+export * from './StringToParseMatchingsList';

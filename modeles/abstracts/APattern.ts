@@ -1,7 +1,7 @@
-import { IPattern, IStringToParse, IStringToParseMatching } from "./../interfaces";
-import { StringToParseMatchingArrayOrNull } from "./../types";
+import { IPattern, IStringToParse, IStringToParseMatching, IStringToParseMatchingsList } from "./../interfaces";
+import { StringToParseMatchingsListOrNull } from "./../types";
 
-import { StringToParseMatching } from "./../concreteClasses";
+import { StringToParseMatching, StringToParseMatchingsList } from "./../concreteClasses";
 
 
 export abstract class APattern implements IPattern {
@@ -15,7 +15,7 @@ export abstract class APattern implements IPattern {
     constructor() {
     }
 
-    abstract getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingArrayOrNull;
+    abstract getStringToParseMatchings(stringToParse: IStringToParse): StringToParseMatchingsListOrNull;
        
 
     setMinOccurencesNumber(minOccurencesNumber: number): IPattern {
@@ -65,6 +65,14 @@ export abstract class APattern implements IPattern {
         return (result);
     }
 
+    
+    protected createStringToParseMatchingsList(elements: Array<IStringToParseMatching> = [])
+        : IStringToParseMatchingsList {
+
+        const result: IStringToParseMatchingsList = new StringToParseMatchingsList(elements);
+        return(result);
+
+    }    
 
     protected createStringToParseMatchingObject(
         pattern: IPattern, 
